@@ -6,7 +6,6 @@ const IMAGE_URL =
 export default function Page() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      {/* LEFT */}
       <div className="hidden lg:flex flex-col justify-between bg-gradient-to-b from-blue-600 to-blue-700 text-white p-12">
         <div>
           <h2 className="text-2xl font-bold">AzDrive</h2>
@@ -31,7 +30,6 @@ export default function Page() {
         </div>
       </div>
 
-      {/* RIGHT */}
       <div className="flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-gray-900">

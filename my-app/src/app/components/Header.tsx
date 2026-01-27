@@ -1,10 +1,11 @@
+import { ModeToggle } from "@/src/component/mode-toggle";
 import Link from "next/link";
 import { FaCarSide } from "react-icons/fa";
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-md">
-      <nav className="container mx-auto flex items-center justify-between px-6 py-4">
+    <header className="shadow-md">
+      <nav className="container mx-auto flex items-center justify-between px-6 py-4 dark:text-[white]">
         <Link
           href="/"
           className="flex items-center gap-2 text-2xl font-bold text-blue-700"
@@ -44,6 +45,8 @@ export default function Header() {
           >
             Регистрация
           </Link>
+
+          <ModeToggle/>
         </div>
       </nav>
     </header>

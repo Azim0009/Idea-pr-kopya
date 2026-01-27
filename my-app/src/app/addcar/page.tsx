@@ -114,7 +114,7 @@ export default function page() {
             <strong>Нужна помощь в регистрации авто?</strong>
             <br />
             Наша служба поддержки работает 24/7. Позвоните нам:
-            <span className="font-medium"> +992 000 000 000</span>
+            <span className="font-medium"> +992 100 700 400</span>
           </div>
         </div>
       </div>

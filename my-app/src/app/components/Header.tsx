@@ -24,6 +24,9 @@ export default function Header() {
           <Link href="/addcar" className="hover:text-blue-700 transition">
             Добавить авто
           </Link>
+           <Link href="/mycars" className="hover:text-blue-700 transition">
+            My cars
+          </Link>
           <Link href="/about" className="hover:text-blue-700 transition">
             О нас
           </Link>

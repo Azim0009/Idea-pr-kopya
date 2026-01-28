@@ -114,7 +114,7 @@ export default function Footer() {
 
             <li className="flex gap-3 items-center hover:text-white transition">
               <FaPhoneAlt className="text-blue-500" />
-              +992 900 123 456
+              +992 100700400
             </li>
 
             <li className="flex gap-3 items-center hover:text-white transition">

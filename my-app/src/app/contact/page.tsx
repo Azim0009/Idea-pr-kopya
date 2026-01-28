@@ -3,7 +3,7 @@ import React from "react";
 export default function page() {
   return (
     <div>
-      <div className=" bg-gray-50">
+      <div className="">
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="mb-10">
             <h1 className="text-3xl font-bold text-gray-900">
@@ -17,7 +17,7 @@ export default function page() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className=" rounded-xl p-6 shadow-sm">
                 <h3 className="font-semibold text-gray-900 mb-2">
                   Телефон поддержки
                 </h3>
@@ -30,14 +30,14 @@ export default function page() {
                 </a>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className=" rounded-xl p-6 shadow-sm">
                 <h3 className="font-semibold text-gray-900 mb-2">
                   Напишите нам
                 </h3>
                 <p className="text-sm text-gray-500 mb-1">
                   Менеджер по работе с клиентами
                 </p>
-                <p className="font-medium text-gray-800">Азим Сухиев</p>
+                <p className="font-medium text-gray-800">Азим Суфиев</p>
                 <a
                   href="mailto:azim@rentacar.tj"
                   className="text-blue-600 hover:underline text-sm"
@@ -46,7 +46,7 @@ export default function page() {
                 </a>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className=" rounded-xl p-6 shadow-sm">
                 <h3 className="font-semibold text-gray-900 mb-2">
                   Рабочее время
                 </h3>
@@ -55,7 +55,7 @@ export default function page() {
             </div>
 
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl p-8 shadow-sm">
+              <div className=" rounded-xl p-8 shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   Отправьте нам сообщение
                 </h2>

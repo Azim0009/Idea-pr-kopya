@@ -93,7 +93,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="bg-[#f6f6f6fb] py-16 px-4 md:px-8 lg:px-16 mt-50">
+      <div className=" py-16 px-4 md:px-8 lg:px-16 mt-50">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Наш путь</h2>
@@ -125,7 +125,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="bg-white py-16 px-4 md:px-8 lg:px-16 mt-50">
+      <div className=" py-16 px-4 md:px-8 lg:px-16 mt-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Наши услуги</h2>
           <p className="text-gray-700 mb-12">

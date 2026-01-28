@@ -87,6 +87,7 @@ export default function Page() {
           </div>
         </div>
       </section>
+      
       <div className="mt-50 text-gray-900 px-6 py-10 max-w-5xl mx-auto space-y-6">
         <div className="space-y-2">
           <div className="flex justify-center">
@@ -186,6 +187,7 @@ export default function Page() {
           </div>
         </div>
       </div>
+     
     </div>
   );
 }

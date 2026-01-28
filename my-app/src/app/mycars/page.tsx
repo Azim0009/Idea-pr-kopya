@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useState, Fragment } from "react";
-import { AppDispatch, RootState } from "@/utils/store";
-import { useDispatch, useSelector } from "react-redux";
-import { GetProfile } from "../../api/api";
+import { Dialog, Transition } from "@headlessui/react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Dialog, Transition } from "@headlessui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -14,46 +11,70 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-export default function Feik() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { cars, loading } = useSelector((state: RootState) => state.cars);
-
-  const [bookedDates, setBookedDates] = useState<{ [key: number]: Date[] }>({});
+export default function MyCars() {
+  const [cars, setCars] = useState([]);
+  const [bookedDates, setBookedDates] = useState({});
   const [openModal, setOpenModal] = useState(false);
-  const [currentCarId, setCurrentCarId] = useState<number | null>(null);
-  const [selectedRange, setSelectedRange] = useState<
-    [Date | null, Date | null]
-  >([null, null]);
+  const [currentCarId, setCurrentCarId] = useState(null);
+  const [selectedRange, setSelectedRange] = useState([null, null]);
 
   useEffect(() => {
-    dispatch(GetProfile());
+    fetchCars();
     fetchBookedDates();
-  }, [dispatch]);
+  }, []);
+
+  const fetchCars = async () => {
+    const res = await fetch("http://localhost:3001/myCars?ownerId=2");
+    const data = await res.json();
+    setCars(data);
+  };
 
   const fetchBookedDates = async () => {
+    const res = await fetch("http://localhost:3001/bookings");
+    const data = await res.json();
+    const booked = {};
+    data.forEach((b) => {
+      if (!booked[b.carId]) booked[b.carId] = [];
+      booked[b.carId].push(new Date(b.date));
+    });
+    setBookedDates(booked);
+  };
+
+  const handleDeleteCar = async (id) => {
     try {
-      const res = await fetch("http://localhost:3001/bookings");
-      const data = await res.json();
-      const booked: { [key: number]: Date[] } = {};
-      data.forEach((b: any) => {
-        if (!booked[b.carId]) booked[b.carId] = [];
-        booked[b.carId].push(new Date(b.date));
-      });
-      setBookedDates(booked);
+      const resBookings = await fetch(`http://localhost:3001/bookings`);
+      const allBookings = await resBookings.json();
+      const carBookings = allBookings.filter((b) => b.carId === id);
+
+      for (const b of carBookings) {
+        await fetch(`http://localhost:3001/bookings/${b.id}`, { method: "DELETE" });
+      }
+
+      await fetch(`http://localhost:3001/myCars/${id}`, { method: "DELETE" });
+
+      setCars(cars.filter((c) => c.id !== id));
+      const updatedBookedDates = { ...bookedDates };
+      delete updatedBookedDates[id];
+      setBookedDates(updatedBookedDates);
     } catch (error) {
-      console.error("Ошибка при загрузке бронирований:", error);
+      console.error("Ошибка при удалении авто и бронирований:", error);
     }
   };
 
+  const isDateBooked = (carId, date) => {
+    const carBooked = bookedDates[carId] || [];
+    return carBooked.some((d) => d.toDateString() === date.toDateString());
+  };
+
   const handleSave = async () => {
-    if (currentCarId === null || !selectedRange[0]) return;
+    if (!currentCarId || !selectedRange[0]) return;
 
     const carBooked = bookedDates[currentCarId] || [];
     const start = selectedRange[0];
     const end = selectedRange[1] || selectedRange[0];
-
-    const newDates: Date[] = [];
+    const newDates = [];
     let current = new Date(start);
+
     while (current <= end) {
       if (!carBooked.some((d) => d.toDateString() === current.toDateString())) {
         newDates.push(new Date(current));
@@ -81,20 +102,14 @@ export default function Feik() {
     setOpenModal(false);
   };
 
-  const isDateBooked = (carId: number, date: Date) => {
-    const carBooked = bookedDates[carId] || [];
-    return carBooked.some((d) => d.toDateString() === date.toDateString());
-  };
-
   const selectedDaysCount = selectedRange[0]
     ? Math.max(
         1,
         Math.ceil(
-          ((selectedRange[1] || selectedRange[0]).getTime() -
-            selectedRange[0].getTime()) /
+          ((selectedRange[1] || selectedRange[0]).getTime() - selectedRange[0].getTime()) /
             (1000 * 60 * 60 * 24) +
-            1,
-        ),
+            1
+        )
       )
     : 0;
 
@@ -103,77 +118,68 @@ export default function Feik() {
   const totalPrice = currentCarPrice ? currentCarPrice * selectedDaysCount : 0;
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-6 py-16">
-      <div className="mt-20">
-        <div className="mt-24">
-          <Swiper
-            modules={[Navigation, Pagination]}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            speed={800}
-            className="w-[90%] h-[620px] mx-auto rounded-[28px] overflow-hidden shadow-2xl"
-          >
-            {cars?.slice(0, 8).map((car: any) => (
-              <SwiperSlide key={car.id}>
-                <div className="relative w-full h-full">
-                  <img
-                    src={car.images?.[0]}
-                    alt={car.brand}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+    <div className="min-h-screen  px-6 py-16">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Мои Автомобили</h1>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-
-                  <div className="relative z-10 h-full flex items-end">
-                    <div className="m-10 w-full max-w-xl">
-                      <span className="inline-block mb-3 bg-yellow-400 text-black text-xs font-extrabold px-4 py-1 rounded-full shadow">
-                        {car.class.toUpperCase()}
-                      </span>
-
-                      <h2 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
-                        {car.brand} {car.model}
-                      </h2>
-
-                      <p className="mt-3 text-gray-200 text-sm max-w-md">
-                        Премиальный автомобиль для города и гор. Максимальный
-                        комфорт и уверенность в любой поездке.
-                      </p>
-
-                      <div className="mt-6 flex items-center gap-8">
-                        <div>
-                          <p className="text-xs text-gray-300">Цена за день</p>
-                          <p className="text-3xl font-bold text-yellow-400 drop-shadow">
-                            ${car.pricePerDay}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            setCurrentCarId(car.id);
-                            setSelectedRange([null, null]);
-                            setOpenModal(true);
-                          }}
-                          className="px-9 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-xl hover:scale-105 transition"
-                        >
-                          Забронировать
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+      <Swiper
+        modules={[Navigation, Pagination]}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        speed={800}
+        className="w-full max-w-5xl h-[500px] mx-auto rounded-2xl overflow-hidden shadow-2xl"
+      >
+        {cars.map((car) => (
+          <SwiperSlide key={car.id}>
+            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg">
+              <img
+                src={car.images?.[0]}
+                alt={car.brand}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="relative z-10 flex flex-col justify-end items-start h-full p-6">
+                <p className="inline mb-2 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow">
+                  {car.class.toUpperCase()}
+                </p>
+                <h2 className="text-3xl font-bold text-white drop-shadow-lg">
+                  {car.brand} {car.model}
+                </h2>
+                <p className="mt-1 text-gray-200 text-sm">
+                  Премиальный автомобиль для города и гор.
+                </p>
+                <div className="mt-4 flex gap-4 items-center">
+                  <p className="text-yellow-400 text-2xl font-bold">${car.pricePerDay}/день</p>
+                  <button
+                    onClick={() => {
+                      setCurrentCarId(car.id);
+                      setSelectedRange([null, null]);
+                      setOpenModal(true);
+                    }}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition"
+                  >
+                    Забронировать
+                  </button>
+                  <button
+                    className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCar(car.id)}
+                    className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition"
+                  >
+                    Delete
+                  </button>
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       <Transition appear show={openModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-50"
-          onClose={() => setOpenModal(false)}
-        >
+        <Dialog as="div" className="relative z-50" onClose={() => setOpenModal(false)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -205,7 +211,7 @@ export default function Feik() {
                   <>
                     <ReactDatePicker
                       selected={selectedRange[0]}
-                      onChange={(dates: any) => setSelectedRange(dates)}
+                      onChange={(dates) => setSelectedRange(dates)}
                       startDate={selectedRange[0]}
                       endDate={selectedRange[1]}
                       selectsRange

@@ -1,121 +1,146 @@
-import React from "react";
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
+  const router = useRouter();
+
+  const [car, setCar] = useState({
+    brand: "",
+    model: "",
+    year: "",
+    transmission: "Автомат",
+    category: "Седан",
+    pricePerDay: "",
+    imageUrl: ""  
+  });
+
+  const addCar = async () => {
+    if (!car.brand || !car.model || !car.pricePerDay || !car.imageUrl) {
+      alert("Заполните все обязательные поля");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/myCars", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: car.brand,
+          model: car.model,
+          year: car.year,
+          transmission: car.transmission,
+          class: car.category,
+          pricePerDay: Number(car.pricePerDay),
+          ownerId: 2,
+          images: [car.imageUrl],  
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.statusText}`);
+      }
+
+      router.push("/mycars");
+    } catch (error) {
+      alert(`Не удалось добавить машину: ${error.message}`);
+    }
+  };
+
   return (
-    <div>
-      <div className="min-h-screen bg-[#f6f8fb] py-10 px-4">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Добавьте свой автомобиль
-          </h1>
-          <p className="text-gray-500 mb-6">
-            Выполните указанные ниже шаги, чтобы разместить свой автомобиль на
-            нашей платформе в Душанбе.
-          </p>
+    <div className="min-h-screen  flex items-center justify-center p-6">
+      <div className=" rounded-xl shadow-lg w-full max-w-xl p-8">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Добавьте свой автомобиль</h2>
 
-          <div className="bg-white rounded-xl p-6 mb-6 shadow-sm">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="font-medium">Шаг 1 из 4: Данные автомобиля</span>
-              <span className="text-blue-600 font-medium">Заполнено 25%</span>
-            </div>
-            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full w-1/4 bg-blue-600 rounded-full" />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Текущий раздел: Общая информация
-            </p>
-          </div>
+        <div className="space-y-6">
+          <input
+            type="text"
+            placeholder="Марка"
+            value={car.brand}
+            onChange={(e) => setCar({ ...car, brand: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
 
-          <div className="bg-white rounded-xl p-8 shadow-sm">
-            <h2 className="font-semibold text-lg mb-4">Общая информация</h2>
+          <input
+            type="text"
+            placeholder="Модель"
+            value={car.model}
+            onChange={(e) => setCar({ ...car, model: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <select className="border rounded-lg px-4 py-3 text-sm">
-                <option>Выберите марку</option>
-              </select>
+          <input
+            type="number"
+            placeholder="Год выпуска"
+            value={car.year}
+            onChange={(e) => setCar({ ...car, year: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
 
-              <select className="border rounded-lg px-4 py-3 text-sm">
-                <option>Выберите модель</option>
-              </select>
-
-              <select className="border rounded-lg px-4 py-3 text-sm">
-                <option>Выберите год</option>
-              </select>
-
-              <div className="flex gap-2">
-                <button className="flex-1 border rounded-lg py-3 text-sm bg-blue-50 border-blue-600 text-blue-600 font-medium">
-                  Автомат
-                </button>
-                <button className="flex-1 border rounded-lg py-3 text-sm">
-                  Механика
-                </button>
-              </div>
-            </div>
-
-            <h2 className="font-semibold text-lg mb-2">Категория автомобиля</h2>
-            <p className="text-sm text-gray-400 mb-4">
-              Выберите категорию, которая лучше всего описывает ваш автомобиль.
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              {["Седан", "Внедорожник", "Эконом", "Люкс"].map((item, i) => (
-                <button
-                  key={item}
-                  className={`border rounded-xl py-6 text-sm font-medium ${
-                    i === 0 ? "border-blue-600 bg-blue-50 text-blue-600" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            <h2 className="font-semibold text-lg mb-2">Фотографии</h2>
-            <p className="text-sm text-gray-400 mb-4">
-              Загрузите качественные фото экстерьера и интерьера (минимум 3).
-            </p>
-
-            <div className="border-2 border-dashed rounded-xl p-10 text-center mb-8">
-              <div className="w-12 h-12 mx-auto mb-3 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                ⬆
-              </div>
-              <p className="text-sm font-medium">
-                Нажмите для загрузки или перетащите фото
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                PNG, JPG или JPEG (макс. 5MB на файл)
-              </p>
-            </div>
-
-            <h2 className="font-semibold text-lg mb-4">Стоимость</h2>
-
-            <div className="border rounded-lg px-4 py-3 flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-500">TJS</span>
-              <span className="text-sm text-gray-400">0.00</span>
-              <span className="text-sm text-gray-400">/ день</span>
-            </div>
-
-            <p className="text-xs text-gray-400 mb-8">
-              Средняя цена для похожих авто в Душанбе: 350 TJS/день
-            </p>
-
-            <div className="flex justify-between">
-              <button className="border px-6 py-3 rounded-lg text-sm">
-                Сохранить черновик
+          <div className="flex space-x-4">
+            {["Автомат", "Механика"].map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setCar({ ...car, transmission: type })}
+                className={`flex-1 py-2 rounded-lg border ${
+                  car.transmission === type
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white border-gray-300"
+                }`}
+              >
+                {type}
               </button>
+            ))}
+          </div>
 
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm flex items-center gap-2">
-                Следующий шаг →
+          <div className="flex space-x-4">
+            {["Седан", "Внедорожник", "Эконом", "Люкс"].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCar({ ...car, category: cat })}
+                className={`flex-1 py-3 rounded-lg border text-center ${
+                  car.category === cat
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white border-gray-300"
+                }`}
+              >
+                {cat}
               </button>
-            </div>
+            ))}
           </div>
 
-          <div className="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-700">
-            <strong>Нужна помощь в регистрации авто?</strong>
-            <br />
-            Наша служба поддержки работает 24/7. Позвоните нам:
-            <span className="font-medium"> +992 100 700 400</span>
-          </div>
+          <input
+            type="text"
+            placeholder="URL фотографии"
+            value={car.imageUrl}
+            onChange={(e) => setCar({ ...car, imageUrl: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
+
+          {car.imageUrl && (
+            <img
+              src={car.imageUrl}
+              alt="Превью"
+              className="w-full max-h-56 object-contain rounded-lg border border-gray-300"
+            />
+          )}
+
+          <input
+            type="number"
+            placeholder="Цена в сутки (TJS)"
+            value={car.pricePerDay}
+            onChange={(e) => setCar({ ...car, pricePerDay: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
+
+          <button
+            onClick={addCar}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+          >
+            Добавить автомобиль
+          </button>
         </div>
       </div>
     </div>

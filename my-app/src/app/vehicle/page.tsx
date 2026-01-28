@@ -109,9 +109,9 @@ export default function AutomobilesPage() {
   });
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className=" min-h-screen">
       <div className="max-w-[1400px] mx-auto px-6 py-14 grid grid-cols-1 lg:grid-cols-4 gap-10">
-        <aside className="bg-white rounded-2xl shadow-lg p-6 h-fit">
+        <aside className=" rounded-2xl shadow-lg p-6 h-fit">
           <h3 className="text-lg font-semibold mb-6">Фильтры</h3>
 
           <div className="mb-10">
@@ -169,7 +169,7 @@ export default function AutomobilesPage() {
             {filteredCars.map((car: any) => (
               <div
                 key={car.id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform"
+                className=" rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform"
               >
                 <div className="relative h-56">
                   <span className="absolute top-4 left-4 z-10 bg-black/70 text-white text-xs px-3 py-1 rounded-full">

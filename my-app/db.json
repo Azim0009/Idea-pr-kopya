@@ -13,6 +13,13 @@
       "email": "owner@example.com",
       "password": "owner123",
       "role": "owner"
+    },
+    {
+      "id": "1769679732426",
+      "name": "Azim",
+      "email": "azimsufiev@gmail.com",
+      "password": "100700400",
+      "role": "owner"
     }
   ],
   "cars": [
@@ -111,7 +118,9 @@
       "model": "Roma",
       "class": "supercar",
       "pricePerDay": 980,
-      "images": []
+      "images": [
+        "https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_240,q_auto:good,w_385/doytd8nw257vjtptpz8a.jpg"
+      ]
     },
     {
       "id": "10",
@@ -138,19 +147,6 @@
   ],
   "myCars": [
     {
-      "id": "cf1a",
-      "brand": "Lexus",
-      "model": "F-Sport",
-      "year": "2012",
-      "transmission": "Автомат",
-      "class": "Люкс",
-      "pricePerDay": 1200,
-      "ownerId": 2,
-      "images": [
-        "https://upload.wikimedia.org/wikipedia/commons/3/3d/Aventador._%286675860749%29.jpg"
-      ]
-    },
-    {
       "id": "4e59",
       "brand": "Bugati",
       "model": "Veyron",
@@ -160,7 +156,7 @@
       "pricePerDay": 2500,
       "ownerId": 2,
       "images": [
-        "https://www.autoshippers.co.uk/blog/wp-content/uploads/bugatti-centodieci.jpg"
+        "https://s.auto.drom.ru/i24212/c/photos/fullsize/bugatti/chiron/bugatti_chiron_750283.jpg"
       ]
     },
     {
@@ -175,28 +171,33 @@
       "images": [
         "https://content.scalecar.ru/clipart/i272892/e61ybT5e14cEUA91-75.jpg"
       ]
+    },
+    {
+      "id": "d3b7",
+      "brand": "Vaz ",
+      "model": "2107",
+      "year": "1997",
+      "transmission": "Механика",
+      "class": "Седан",
+      "pricePerDay": 200,
+      "ownerId": 2,
+      "images": [
+        "https://motor.ru/imgs/2024/09/09/09/6587767/66fab8c22da8f5b72b835cd19a348db63c841dd5.jpg"
+      ]
+    },
+    {
+      "id": "a61f",
+      "brand": "Mercedes",
+      "model": "w210",
+      "year": "2001",
+      "transmission": "Автомат",
+      "class": "Седан",
+      "pricePerDay": 450,
+      "ownerId": 2,
+      "images": [
+        "https://i.pinimg.com/736x/51/4a/16/514a16c53baa91c781c78f464bc9d29d.jpg"
+      ]
     }
   ],
-  "bookings": [
-    {
-      "id": "f770",
-      "carId": "6",
-      "date": "2026-01-31"
-    },
-    {
-      "id": "7874",
-      "carId": "6",
-      "date": "2026-02-01"
-    },
-    {
-      "id": "df9b",
-      "carId": "6",
-      "date": "2026-02-02"
-    },
-    {
-      "id": "eb79",
-      "carId": "6",
-      "date": "2026-02-03"
-    }
-  ]
+  "bookings": []
 }

@@ -6,12 +6,15 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { useRouter } from "next/navigation";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-export default function MyCars() {
+export default function Page() {
+  const router = useRouter();
+
   const [cars, setCars] = useState([]);
   const [bookedDates, setBookedDates] = useState({});
   const [openModal, setOpenModal] = useState(false);
@@ -47,7 +50,9 @@ export default function MyCars() {
       const carBookings = allBookings.filter((b) => b.carId === id);
 
       for (const b of carBookings) {
-        await fetch(`http://localhost:3001/bookings/${b.id}`, { method: "DELETE" });
+        await fetch(`http://localhost:3001/bookings/${b.id}`, {
+          method: "DELETE",
+        });
       }
 
       await fetch(`http://localhost:3001/myCars/${id}`, { method: "DELETE" });
@@ -106,10 +111,11 @@ export default function MyCars() {
     ? Math.max(
         1,
         Math.ceil(
-          ((selectedRange[1] || selectedRange[0]).getTime() - selectedRange[0].getTime()) /
+          ((selectedRange[1] || selectedRange[0]).getTime() -
+            selectedRange[0].getTime()) /
             (1000 * 60 * 60 * 24) +
-            1
-        )
+            1,
+        ),
       )
     : 0;
 
@@ -119,7 +125,9 @@ export default function MyCars() {
 
   return (
     <div className="min-h-screen  px-6 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Мои Автомобили</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Мои Автомобили
+      </h1>
 
       <Swiper
         modules={[Navigation, Pagination]}
@@ -149,7 +157,9 @@ export default function MyCars() {
                   Премиальный автомобиль для города и гор.
                 </p>
                 <div className="mt-4 flex gap-4 items-center">
-                  <p className="text-yellow-400 text-2xl font-bold">${car.pricePerDay}/день</p>
+                  <p className="text-yellow-400 text-2xl font-bold">
+                    ${car.pricePerDay}/день
+                  </p>
                   <button
                     onClick={() => {
                       setCurrentCarId(car.id);
@@ -161,10 +171,12 @@ export default function MyCars() {
                     Забронировать
                   </button>
                   <button
+                    onClick={() => router.push(`/bookinginfo?carId=${car.id}`)}
                     className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition"
                   >
                     Edit
                   </button>
+
                   <button
                     onClick={() => handleDeleteCar(car.id)}
                     className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition"
@@ -179,7 +191,11 @@ export default function MyCars() {
       </Swiper>
 
       <Transition appear show={openModal} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={() => setOpenModal(false)}>
+        <Dialog
+          as="div"
+          className="relative z-50"
+          onClose={() => setOpenModal(false)}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

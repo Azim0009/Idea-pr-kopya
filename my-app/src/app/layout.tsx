@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ReduxProvider from "@/utils/ReduxProvider";
 import { ThemeProvider } from "../component/theme-provider";
+import HeaderWrapper from "./components/HeaderWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,21 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "AZ-Drive",
   description: "Car rental service in Dushanbe",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReduxProvider>
           <ThemeProvider
             attribute="class"
@@ -38,11 +31,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
+            <HeaderWrapper />
+
             <main>{children}</main>
-            <div className="mt-10">
-              <Footer />
-            </div>
+
+            <Footer />
           </ThemeProvider>
         </ReduxProvider>
       </body>

@@ -1,66 +1,71 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const IMAGE_URL =
   "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80";
 
 export default function Page() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    const res = await fetch(
+      `http://localhost:3001/users?email=${email}&password=${password}`
+    );
+    const data = await res.json();
+
+    if (!data.length) {
+      alert("Неверный email или пароль");
+      return;
+    }
+
+    const user = data[0];
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    router.push(user.role === "owner" ? "/" : "/");
+  };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-b from-blue-600 to-blue-700 text-white p-12">
-        <div>
-          <h2 className="text-2xl font-bold">AzDrive</h2>
-          <h1 className="text-4xl font-extrabold mt-16 leading-tight">
-            Исследуйте <br /> Душанбе на <br /> колесах
-          </h1>
-          <p className="mt-6 text-blue-100 max-w-md">
-            Добро пожаловать на ведущую платформу по аренде автомобилей
-            в Таджикистане.
-          </p>
-        </div>
-
-        <div className="bg-white/10 rounded-xl p-4">
-          <img
-            src={IMAGE_URL}
-            alt="car"
-            className="rounded-lg w-full object-cover"
-          />
-          <p className="text-sm mt-3 text-blue-100">
-            📍 Доступно по всему Душанбе и Таджикистану
-          </p>
-        </div>
+      <div className="hidden lg:flex bg-gradient-to-b from-blue-600 to-blue-700 text-white p-12">
+        <img src={IMAGE_URL} className="rounded-xl" />
       </div>
 
       <div className="flex items-center justify-center p-6">
-        <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Начните работу
-          </h2>
-          <p className="text-gray-500 mt-2">Войдите в свой аккаунт</p>
+        <div className="w-full max-w-md space-y-4">
+          <h2 className="text-2xl font-bold">Вход</h2>
 
-          <div className="mt-8 space-y-4">
-            <input
-              type="email"
-              placeholder="Email адрес"
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            />
+          <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg"
+          />
 
-            <input
-              type="password"
-              placeholder="Пароль"
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            />
+          <input
+            type="password"
+            placeholder="Пароль"
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg"
+          />
 
-            <button className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-              Войти
-            </button>
-          </div>
+          <button
+            onClick={login}
+            className="w-full py-3 bg-blue-600 text-white rounded-lg"
+          >
+            Войти
+          </button>
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <p className="text-center text-gray-500 mt-4 text-sm">
             Нет аккаунта?{" "}
-            <a href="/registraciya" className="text-blue-600 font-medium">
-              Регистрация
-            </a>
-          </div>
+            <Link href="/registraciya" className="text-blue-600 font-medium">
+              Зарегистрироваться
+            </Link>
+          </p>
         </div>
       </div>
     </div>
